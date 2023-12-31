@@ -21,7 +21,6 @@ function Login({ onCloseForm }) {
       if (onCloseForm) {
         onCloseForm();
       }
-      toast.success("Sign in successfully!!!");
     } catch (error) {
       console.log("Failed to login: ", error);
       toast.error("Error!!!");

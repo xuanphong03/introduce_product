@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
+import { FaCircleUser } from "react-icons/fa6";
 import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../features/Auth/userSlice";
 
 Header.propTypes = {
   openFormLogin: PropTypes.func,
@@ -15,8 +18,43 @@ const NAVIGATIONS = [
 ];
 
 function Header({ openFormLogin }) {
+  const dispatch = useDispatch();
+
+  const [isOpenedMenu, setOpenedMenu] = useState(false);
+
+  const infoUser = useSelector((state) => state.user.current);
+  const isLoggedIn = !!infoUser.id;
+
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // Bấm ra ngoài menu, đóng menu
+        setOpenedMenu(false);
+      }
+    };
+
+    // Thêm sự kiện lắng nghe cho cả trang
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // Gỡ bỏ sự kiện lắng nghe khi component unmount
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
+
   const handleClickLogin = () => {
     openFormLogin();
+  };
+
+  const toggleOpenMenu = () => {
+    setOpenedMenu((prevState) => !prevState);
+  };
+
+  const handleLogoutAccount = (event) => {
+    const action = logout();
+    dispatch(action);
   };
 
   return (
@@ -36,13 +74,54 @@ function Header({ openFormLogin }) {
             {nav.name}
           </NavLink>
         ))}
-        <div
-          className="flex items-center text-lg ml-4 cursor-pointer"
-          onClick={handleClickLogin}
-        >
-          <FaRegUser />
-          <span className="ml-2">Login</span>
-        </div>
+
+        {!isLoggedIn && (
+          <div
+            className="flex items-center text-lg cursor-pointer px-6 py-[6px] ml-[2px] hover:bg-purple-700 hover:text-white rounded-md"
+            onClick={handleClickLogin}
+          >
+            <FaRegUser />
+            <span className="ml-2">Login</span>
+          </div>
+        )}
+
+        {isLoggedIn && (
+          <div
+            ref={menuRef}
+            onClick={toggleOpenMenu}
+            className="relative flex items-center px-6 py-[6px] text-lg cursor-pointer"
+          >
+            <FaCircleUser className="text-2xl" />
+            <span className="ml-2">Admin</span>
+            {isOpenedMenu && (
+              <div className="absolute rounded top-[2.5rem] w-40 right-0 bg-white z-50 text-base list-nonedivide-y divide-gray-100  shadow dark:bg-gray-700 dark:divide-gray-600">
+                <div className="px-4 py-3">
+                  <span className="block text-sm text-gray-900 dark:text-white">
+                    Admin
+                  </span>
+                  <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
+                    admin@gmail.com
+                  </span>
+                </div>
+                <ul className="py-2 border-t border-solid">
+                  <li>
+                    <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                      Manage product
+                    </span>
+                  </li>
+                  <li>
+                    <span
+                      onClick={handleLogoutAccount}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Sign out
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </ul>
     </div>
   );
