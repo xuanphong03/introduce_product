@@ -4,6 +4,8 @@ import Header from "./components/Header/Header";
 import Home from "./features/Home/Home";
 import Login from "./features/Auth/components/Login";
 import { ToastContainer } from "react-toastify";
+import Product from "./features/Product/Product";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 
 function App() {
   const [openFormLogin, setOpenFormLogin] = useState(false);
@@ -22,6 +24,8 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/product/*" element={<Product />} />
+        <Route path="/*" element={<PageNotFound />} />
       </Routes>
       <ToastContainer />
       {openFormLogin && <Login onCloseForm={handleCLoseFormLogin} />}

@@ -32,7 +32,9 @@ function PasswordField({ id, label, placeholder, register, errorMessage }) {
           {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
         </div>
       </div>
-      <span className="text-red-500">{errorMessage}</span>
+      {errorMessage && (
+        <span className="text-red-500 text-xs px-1">{errorMessage}</span>
+      )}
     </div>
   );
 }

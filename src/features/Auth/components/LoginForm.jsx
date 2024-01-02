@@ -5,8 +5,8 @@ import * as yup from "yup";
 import PropTypes from "prop-types";
 import React from "react";
 import { IoClose } from "react-icons/io5";
-import InputField from "../../../components/InputField/InputField";
-import PasswordField from "../../../components/PasswordField/PasswordField";
+import InputField from "../../../components/form-control/InputField/InputField";
+import PasswordField from "../../../components/form-control/PasswordField/PasswordField";
 
 LoginForm.propTypes = {
   onClose: PropTypes.func,

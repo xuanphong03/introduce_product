@@ -1,13 +1,10 @@
 import React from "react";
-import PropTypes from "prop-types";
 import LoginForm from "./LoginForm";
 import { useDispatch } from "react-redux";
 import { login } from "../userSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-Login.propTypes = {};
 
 function Login({ onCloseForm }) {
   const dispatch = useDispatch();

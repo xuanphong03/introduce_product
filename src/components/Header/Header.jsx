@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { FaCircleUser } from "react-icons/fa6";
 import PropTypes from "prop-types";
@@ -91,10 +91,15 @@ function Header({ openFormLogin }) {
             onClick={toggleOpenMenu}
             className="relative flex items-center px-6 py-[6px] text-lg cursor-pointer"
           >
-            <FaCircleUser className="text-2xl" />
+            {/* <FaCircleUser className="text-2xl" /> */}
+            <img
+              src="https://kenh14cdn.com/cPLqMkXoPs3Tkua5x0JnElZd2udVtV/Image/2015/03/updates/150330dep03-7ef68.jpg"
+              alt="avatar"
+              className="w-10 rounded-full"
+            />
             <span className="ml-2">Admin</span>
             {isOpenedMenu && (
-              <div className="absolute rounded top-[2.5rem] w-40 right-0 bg-white z-50 text-base list-nonedivide-y divide-gray-100  shadow dark:bg-gray-700 dark:divide-gray-600">
+              <div className="absolute rounded top-[3rem] w-40 right-4 bg-white z-50 text-base list-nonedivide-y divide-gray-100  shadow dark:bg-gray-700 dark:divide-gray-600">
                 <div className="px-4 py-3">
                   <span className="block text-sm text-gray-900 dark:text-white">
                     Admin
@@ -105,9 +110,12 @@ function Header({ openFormLogin }) {
                 </div>
                 <ul className="py-2 border-t border-solid">
                   <li>
-                    <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                    <Link
+                      to="/product/admin/product-list"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
                       Manage product
-                    </span>
+                    </Link>
                   </li>
                   <li>
                     <span
