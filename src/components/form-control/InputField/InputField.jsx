@@ -2,18 +2,29 @@ import React from "react";
 import PropTypes from "prop-types";
 
 InputField.propTypes = {
-  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   register: PropTypes.object.isRequired,
-  type: PropTypes.string.isRequired,
+
+  type: PropTypes.string,
   placeholder: PropTypes.string,
   errorMessage: PropTypes.string,
 };
 
-function InputField({ id, label, placeholder, type, register, errorMessage }) {
+function InputField({
+  name,
+  label,
+  placeholder,
+  type,
+  register,
+  errorMessage,
+}) {
   return (
     <div className="mb-2">
-      <label htmlFor={id} className="block text-sm font-semibold text-gray-800">
+      <label
+        htmlFor={name}
+        className="block text-sm font-semibold text-gray-800"
+      >
         {label}
       </label>
       <input

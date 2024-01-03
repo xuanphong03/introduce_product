@@ -19,6 +19,11 @@ function FormCreateProduct({ onSubmit }) {
       .number()
       .required("Please enter product price.")
       .moreThan(0, "The product's price must be greater than 0"),
+    picture: yup
+      .mixed()
+      .test("required", "Please select a picture", (value) => {
+        return value && value.length;
+      }),
   });
 
   const {
@@ -43,7 +48,7 @@ function FormCreateProduct({ onSubmit }) {
       </h2>
       <form className="mt-6" onSubmit={handleSubmit(formSubmit)}>
         <InputField
-          id="name"
+          name="name"
           type="text"
           label="Product name"
           placeholder="Enter product name..."
@@ -51,7 +56,7 @@ function FormCreateProduct({ onSubmit }) {
           errorMessage={errors.name?.message}
         />
         <InputField
-          id="price"
+          name="price"
           label="Price"
           type="number"
           placeholder="Enter price of product..."
@@ -61,25 +66,27 @@ function FormCreateProduct({ onSubmit }) {
 
         <div className="flex items-center justify-between">
           <OptionField
-            id="color"
+            name="color"
             label="Color"
             register={{ ...register("color") }}
             options={["White", "Black", "Red", "Silver"]}
           />
 
           <OptionField
-            id="country"
+            name="country"
             label="Coutry"
             register={{ ...register("country") }}
             options={["USA", "Japan", "China", "Korea", "UK", "Rusia"]}
           />
         </div>
+
         <ImageField
-          id="image"
-          label="Choose an image"
-          register={{ ...register("image") }}
-          errorMessage={errors.image?.message}
+          name="picture"
+          id="fileUpload"
+          register={{ ...register("picture") }}
+          errorMessage={errors.picture?.message}
         />
+
         <div className="mt-6">
           <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
             Create

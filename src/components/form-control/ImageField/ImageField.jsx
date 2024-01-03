@@ -1,15 +1,13 @@
-import PropTypes from "prop-types";
 import React, { useState } from "react";
-import { THUMBNAIL_PLACEHOLDER_150 } from "../../../constants/common";
-
+import PropTypes from "prop-types";
+import { THUMBNAIL_PLACEHOLDER_150 } from "../../../constants";
 ImageField.propTypes = {
-  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   register: PropTypes.object.isRequired,
   label: PropTypes.string,
   errorMessage: PropTypes.string,
 };
-
-function ImageField({ id, label, register, errorMessage }) {
+function ImageField({ id, name, label, register, errorMessage }) {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (e) => {
@@ -26,17 +24,13 @@ function ImageField({ id, label, register, errorMessage }) {
         {label}
       </label>
       <input
-        className="text-sm block my-2 cursor-pointer"
-        type="file"
         id={id}
-        name="avatar"
+        name={name}
+        type="file"
+        {...register}
         accept="image/png, image/jpeg"
-        register={{
-          onChange: (e) => {
-            register("image").onChange(e);
-            handleFileChange(e);
-          },
-        }}
+        className="text-sm block my-2 cursor-pointer"
+        onChange={handleFileChange}
       />
       <div className="round">
         {selectedFile ? (
@@ -50,11 +44,14 @@ function ImageField({ id, label, register, errorMessage }) {
             className="h-[150px] w-[150px] rounded"
             src={THUMBNAIL_PLACEHOLDER_150}
             alt=""
-            width={100}
           />
         )}
       </div>
+      {errorMessage && (
+        <span className="text-red-500 text-xs px-1">{errorMessage}</span>
+      )}
     </div>
   );
 }
+
 export default ImageField;
