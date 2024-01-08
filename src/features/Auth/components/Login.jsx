@@ -1,10 +1,10 @@
-import React from "react";
-import LoginForm from "./LoginForm";
-import { useDispatch } from "react-redux";
-import { login } from "../userSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { login } from "../userSlice";
+import LoginForm from "./LoginForm";
 
 function Login({ onCloseForm }) {
   const dispatch = useDispatch();

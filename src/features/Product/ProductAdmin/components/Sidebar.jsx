@@ -1,26 +1,39 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { FaRegListAlt } from "react-icons/fa";
+import { IoIosCreate } from "react-icons/io";
 
 const SIDE_BAR = [
-  { id: 1, name: "Product list", url: "/product/admin/product-list" },
-  { id: 2, name: "Create product", url: "/product/admin/create" },
+  {
+    id: 1,
+    name: "Product list",
+    url: "/admin/product-list",
+    icon: <FaRegListAlt />,
+  },
+  {
+    id: 2,
+    name: "Add product",
+    url: "/admin/create",
+    icon: <IoIosCreate />,
+  },
 ];
 
 function Sidebar(props) {
   return (
-    <div className="w-[300px] pl-12 pr-8 bg-blue-300">
+    <div className="pt-2 bg-slate-600 col-span-1 md:col-span-2">
       {SIDE_BAR.map((nav) => {
         return (
           <NavLink
             key={nav.id}
             to={nav.url}
             className={({ isActive }) =>
-              `uppercase block font-medium text-lg my-2 py-2 px-8 rounded bg-slate-400 cursor-pointer ${
-                isActive ? "bg-blue-800 text-white" : ""
+              `uppercase flex items-center lg:justify-start justify-center text-white my-1 py-2 md:px-12 cursor-pointer ${
+                isActive ? "bg-blue-800 " : ""
               }`
             }
           >
-            {nav.name}
+            <div className="md:mr-2 font-medium text-lg ">{nav.icon}</div>
+            <span className="hidden md:block text-sm">{nav.name}</span>
           </NavLink>
         );
       })}

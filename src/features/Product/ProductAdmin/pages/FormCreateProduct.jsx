@@ -2,11 +2,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-import React from "react";
 import PropTypes from "prop-types";
-import InputField from "../../../../components/form-control/InputField/InputField";
+import React from "react";
 import ImageField from "../../../../components/form-control/ImageField/ImageField";
+import InputField from "../../../../components/form-control/InputField/InputField";
 import SelectField from "../../../../components/form-control/SelectField/SelectField";
+import TextAreaField from "../../../../components/form-control/TextAreaField/TextAreaField";
 
 FormCreateProduct.propTypes = {
   onSubmit: PropTypes.func,
@@ -30,7 +31,7 @@ function FormCreateProduct({ onSubmit }) {
     price: yup
       .number()
       .required("Please enter product price.")
-      .moreThan(0, "The product's price must be greater than 0"),
+      .moreThan(0, "Price must be greater than 0"),
     picture: yup
       .mixed()
       .test("required", "Please select a picture", (value) => {
@@ -41,77 +42,101 @@ function FormCreateProduct({ onSubmit }) {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const formSubmit = async (data) => {
-    console.log(data);
+    const selectedFile = data.picture[0];
     if (onSubmit) {
-      await onSubmit(data);
+      await onSubmit({
+        ...data,
+        picture: selectedFile,
+      });
+      // Reset the form after successful submission
+      reset();
     }
   };
 
   return (
-    <div className="min-[400px] bg-white mx-auto w-1/2 px-8 py-2 rounded-md">
+    <div className="min-[400px] relative bg-white mx-auto mt-2 w-3/4 px-8 pt-2 pb-14 rounded-md">
       <h2 className="uppercase font-semibold text-xl text-center">
         Create new product
       </h2>
-      <form className="mt-6" onSubmit={handleSubmit(formSubmit)}>
-        <div className="flex justify-between">
-          <InputField
-            name="name"
-            type="text"
-            label="Product name"
-            placeholder="Enter product name..."
-            register={{ ...register("name") }}
-            errorMessage={errors.name?.message}
-            className="w-2/3"
+      <form
+        className="mt-6 flex flex-wrap gap-12 mb-4"
+        onSubmit={handleSubmit(formSubmit)}
+        encType="multipart/form-data"
+      >
+        <div className="flex-1 flex flex-col justify-between">
+          <div className="flex flex-wrap justify-between">
+            <div className="flex-2 mr-12">
+              <InputField
+                id="product_name"
+                type="text"
+                label="Product name"
+                placeholder="Enter product name..."
+                required={true}
+                register={{ ...register("name") }}
+                errorMessage={errors.name?.message}
+              />
+            </div>
+            <div className="flex-1">
+              <InputField
+                id="price"
+                label="Price"
+                type="number"
+                placeholder="Enter price of product..."
+                required={true}
+                register={{ ...register("price", { value: 0 }) }}
+                errorMessage={errors.price?.message}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between">
+            <SelectField
+              name="color"
+              label="Color"
+              register={{ ...register("color") }}
+              options={COLOR_LIST}
+            />
+
+            <SelectField
+              name="brand"
+              label="Brand"
+              register={{ ...register("brand") }}
+              options={BRAND_LIST}
+            />
+
+            <SelectField
+              name="country"
+              label="Coutry"
+              register={{ ...register("country") }}
+              options={COUNTRY_LIST}
+            />
+          </div>
+
+          <ImageField
+            label="Choose a picture"
+            name="picture"
+            id="fileUpload"
+            register={{ ...register("picture") }}
+            errorMessage={errors.picture?.message}
           />
-          <InputField
-            name="price"
-            label="Price"
-            type="number"
-            placeholder="Enter price of product..."
-            register={{ ...register("price", { value: 0 }) }}
-            errorMessage={errors.price?.message}
-            className="w-1/3"
+
+          <TextAreaField
+            name="description"
+            label="Description"
+            placeholder="Write descriptions about product thoughts here..."
+            row={6}
+            register={{ ...register("description") }}
           />
         </div>
 
-        <div className="flex items-center justify-between">
-          <SelectField
-            name="color"
-            label="Color"
-            register={{ ...register("color") }}
-            options={COLOR_LIST}
-          />
-
-          <SelectField
-            name="brand"
-            label="Brand"
-            register={{ ...register("brand") }}
-            options={BRAND_LIST}
-          />
-
-          <SelectField
-            name="country"
-            label="Coutry"
-            register={{ ...register("country") }}
-            options={COUNTRY_LIST}
-          />
-        </div>
-
-        <ImageField
-          label="Choose a picture"
-          name="picture"
-          id="fileUpload"
-          register={{ ...register("picture") }}
-          errorMessage={errors.picture?.message}
-        />
-
-        <div className="mt-6">
+        <div className="mt-6 absolute bottom-4 right-4 w-36">
           <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
             Create
           </button>

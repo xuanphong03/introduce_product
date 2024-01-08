@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
-import { FaCircleUser } from "react-icons/fa6";
+import Logo from "../../assets/images/logo.png";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/Auth/userSlice";
@@ -59,7 +59,12 @@ function Header({ openFormLogin }) {
 
   return (
     <div className="flex bg-slate-400 justify-between items-center px-12 h-[var(--height-header)]">
-      <div className="font-extrabold  text-2xl">MICHAEL WATCH</div>
+      <Link to="/" className="block font-extrabold text-2xl mr-12">
+        <img src={Logo} alt="" className=" lg:hidden w-16 h-16" />
+        <span className="hidden lg:block leading-[var(--height-header)]">
+          MICHAEL WATCH
+        </span>
+      </Link>
       <ul className="flex items-center">
         {NAVIGATIONS.map((nav) => (
           <NavLink
@@ -111,7 +116,7 @@ function Header({ openFormLogin }) {
                 <ul className="py-2 border-t border-solid">
                   <li>
                     <Link
-                      to="/product/admin/product-list"
+                      to="/admin/product-list"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
                       Manage product
