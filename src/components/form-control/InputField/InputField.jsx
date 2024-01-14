@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 InputField.propTypes = {
   id: PropTypes.string.isRequired,
@@ -9,6 +9,7 @@ InputField.propTypes = {
   type: PropTypes.string,
   placeholder: PropTypes.string,
   errorMessage: PropTypes.string,
+  value: PropTypes.string,
 };
 
 function InputField({

@@ -4,10 +4,10 @@ import * as yup from "yup";
 
 import PropTypes from "prop-types";
 import React from "react";
-import ImageField from "../../../../components/form-control/ImageField/ImageField";
 import InputField from "../../../../components/form-control/InputField/InputField";
 import SelectField from "../../../../components/form-control/SelectField/SelectField";
 import TextAreaField from "../../../../components/form-control/TextAreaField/TextAreaField";
+import uuid from "react-uuid";
 
 FormCreateProduct.propTypes = {
   onSubmit: PropTypes.func,
@@ -32,11 +32,7 @@ function FormCreateProduct({ onSubmit }) {
       .number()
       .required("Please enter product price.")
       .moreThan(0, "Price must be greater than 0"),
-    picture: yup
-      .mixed()
-      .test("required", "Please select a picture", (value) => {
-        return value && value.length;
-      }),
+    pictureURL: yup.string().required("Please enter URL image."),
   });
 
   const {
@@ -49,13 +45,9 @@ function FormCreateProduct({ onSubmit }) {
   });
 
   const formSubmit = async (data) => {
-    const selectedFile = data.picture[0];
+    const id = uuid();
     if (onSubmit) {
-      await onSubmit({
-        ...data,
-        picture: selectedFile,
-      });
-      // Reset the form after successful submission
+      await onSubmit({ ...data, id });
       reset();
     }
   };
@@ -119,12 +111,15 @@ function FormCreateProduct({ onSubmit }) {
             />
           </div>
 
-          <ImageField
-            label="Choose a picture"
-            name="picture"
-            id="fileUpload"
-            register={{ ...register("picture") }}
-            errorMessage={errors.picture?.message}
+          <InputField
+            id="pictureURL"
+            label="URL of picture"
+            name="pictureURL"
+            type="text"
+            placeholder="Enter url of image..."
+            required={true}
+            register={{ ...register("pictureURL") }}
+            errorMessage={errors.pictureURL?.message}
           />
 
           <TextAreaField

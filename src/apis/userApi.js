@@ -13,7 +13,6 @@ const userApi = {
         Authorization: `Bearer ${localStorage.getItem("access_token")}`,
       },
     };
-    console.log(config);
     return axiosClient.post(url, config);
   },
 };

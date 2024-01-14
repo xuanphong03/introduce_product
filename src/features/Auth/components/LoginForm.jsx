@@ -32,6 +32,7 @@ function LoginForm({ onClose, onSubmit }) {
 
   const formSubmit = async (data) => {
     if (onSubmit) {
+      console.log("Data login: ", data);
       await onSubmit(data);
     }
   };

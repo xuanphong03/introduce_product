@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { MdDeleteOutline, MdOutlineCreate } from "react-icons/md";
-import { Link } from "react-router-dom";
+import ProductUpdate from "./ProductUpdate";
 
 ProductListAdmin.propTypes = {
   productList: PropTypes.array.isRequired,
@@ -18,6 +18,8 @@ const PRODUCT_HEADER_LABEL = [
 ];
 
 function ProductListAdmin({ productList = [] }) {
+  const [updatingProduct, setUpdatingProduct] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const limitItem = 5;
 
@@ -28,8 +30,25 @@ function ProductListAdmin({ productList = [] }) {
   // Lấy danh sách sản phẩm cho trang hiện tại
   const currentProducts = productList.slice(startIndex, endIndex);
 
+  const handleUpdateProduct = (product) => {
+    console.log("Data product before update: ", product);
+
+    setSelectedProduct(product);
+    setUpdatingProduct(true);
+  };
+
+  const handleCloseFormUpdate = () => {
+    setUpdatingProduct(false);
+  };
+
   return (
-    <div className="col-span-11 md:col-span-10 p-6 bg-gray-200">
+    <div className="relative col-span-11 md:col-span-10 p-6 bg-gray-200">
+      {updatingProduct && (
+        <ProductUpdate
+          product={selectedProduct}
+          closeForm={handleCloseFormUpdate}
+        />
+      )}
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -55,22 +74,26 @@ function ProductListAdmin({ productList = [] }) {
                     {product.name}
                   </th>
                   <td className="px-2 py-2">
-                    <img src={product.img} alt="img" className="w-16 rounded" />
+                    <img
+                      src={product.pictureURL}
+                      alt="img"
+                      className="w-16 rounded"
+                    />
                   </td>
                   <td className="px-6 py-4 ">{product.color}</td>
                   <td className="px-6 py-4">{product.brand}</td>
                   <td className="px-6 py-4">{product.country}</td>
                   <td className="px-6 py-4">${product.price}</td>
                   <td className="px-6 py-4">
-                    <Link
-                      to={`/product/admin/update/${product.id}`}
-                      className="flex items-center px-1 py-2  cursor-pointer hover:underline"
+                    <div
+                      onClick={() => handleUpdateProduct(product)}
+                      className="flex items-center px-1 py-2 cursor-pointer hover:underline"
                     >
                       <MdOutlineCreate className="mr-1 text-lg" />
                       <span className="font-medium text-blue-600 dark:text-blue-500">
                         Edit
                       </span>
-                    </Link>
+                    </div>
                     <div className="flex items-center p-1 hover:underline cursor-pointer">
                       <MdDeleteOutline className="mr-1 text-lg" />
                       <span className="font-medium text-red-600 dark:text-red-500 ">

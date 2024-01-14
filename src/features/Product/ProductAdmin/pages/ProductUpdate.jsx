@@ -1,13 +1,14 @@
 import React from "react";
 import FormUpdateProduct from "./FormUpdateProduct";
 
-function ProductUpdate(props) {
+function ProductUpdate({ product, closeForm }) {
   const handleUpdateProduct = (data) => {
-    console.log(data);
+    closeForm();
+    console.log("Data product after update: ", data);
   };
   return (
-    <div className="flex-1 px-6 py-2 bg-gray-200">
-      <FormUpdateProduct onSubmit={handleUpdateProduct} />
+    <div className="col-span-11 md:col-span-10 px-6 py-2 bg-gray-200">
+      <FormUpdateProduct product={product} onSubmit={handleUpdateProduct} />
     </div>
   );
 }

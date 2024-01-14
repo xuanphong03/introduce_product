@@ -5,7 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 function ProductCreate(props) {
   const handleCreateProduct = (data) => {
     try {
-      console.log(data);
+      console.log("Data new product: ", data);
+
       toast.success("Add product successfully 🎉", {
         autoClose: 3000,
       });
