@@ -1,4 +1,5 @@
 import axios from "axios";
+import StorageKeys from "../constants/storage-key";
 
 const axiosClient = axios.create({
   baseURL: "https://api.ezfrontend.com/",
@@ -6,6 +7,11 @@ const axiosClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Alter defaults after instance has been created
+axiosClient.defaults.headers.common[
+  "Authorization"
+] = `Bearer ${localStorage.getItem(StorageKeys.TOKEN)}`;
 
 // Add a request interceptor
 axiosClient.interceptors.request.use(
@@ -25,21 +31,13 @@ axiosClient.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response.data;
+    console.log("Interceptors response: ", response.data);
+    return response && response.data ? response.data : response;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
 
-    // const { config, status, data } = error.response;
-    // const URLs = ["/auth/local/register", "/auth/local"];
-    // if (URLs.includes(config.url) && status === 400) {
-    //   const errorList = data.data || [];
-    //   const firstError = errorList.length > 0 ? errorList[0] : {};
-    //   const messageList = firstError.messages || [];
-    //   const fisrtMessage = messageList.length > 0 ? messageList[0] : {};
-    //   throw new Error(fisrtMessage.message);
-    // }
     return Promise.reject(error);
   }
 );

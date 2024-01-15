@@ -7,7 +7,6 @@ import React from "react";
 import InputField from "../../../../components/form-control/InputField/InputField";
 import SelectField from "../../../../components/form-control/SelectField/SelectField";
 import TextAreaField from "../../../../components/form-control/TextAreaField/TextAreaField";
-import uuid from "react-uuid";
 
 FormCreateProduct.propTypes = {
   onSubmit: PropTypes.func,
@@ -45,9 +44,8 @@ function FormCreateProduct({ onSubmit }) {
   });
 
   const formSubmit = async (data) => {
-    const id = uuid();
     if (onSubmit) {
-      await onSubmit({ ...data, id });
+      await onSubmit(data);
       reset();
     }
   };

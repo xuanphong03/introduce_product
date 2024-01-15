@@ -6,14 +6,9 @@ const userApi = {
     return axiosClient.post(url, data);
   },
 
-  getProfile() {
-    const url = "/profile";
-    const config = {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    };
-    return axiosClient.post(url, config);
+  createProduct(data) {
+    const url = "/api/v1/add-ob";
+    return axiosClient.post(url, data);
   },
 };
 
