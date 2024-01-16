@@ -1,5 +1,4 @@
 import axios from "axios";
-import StorageKeys from "../constants/storage-key";
 
 const axiosClient = axios.create({
   baseURL: "https://api.ezfrontend.com/",
@@ -7,11 +6,6 @@ const axiosClient = axios.create({
     "Content-Type": "application/json",
   },
 });
-
-// Alter defaults after instance has been created
-axiosClient.defaults.headers.common[
-  "Authorization"
-] = `Bearer ${localStorage.getItem(StorageKeys.TOKEN)}`;
 
 // Add a request interceptor
 axiosClient.interceptors.request.use(

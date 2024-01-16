@@ -1,18 +1,28 @@
 import React from "react";
 import FormCreateProduct from "./FormCreateProduct";
 import { ToastContainer, toast } from "react-toastify";
+import productApi from "../../../../apis/productApi";
 
 function ProductCreate(props) {
-  const handleCreateProduct = (data) => {
+  const handleCreateProduct = async (data) => {
     try {
       console.log("Data new product: ", data);
 
-      toast.success("Add product successfully 🎉", {
-        autoClose: 3000,
-      });
+      // Call api tạo sản phẩm
+      const response = await productApi.addProduct(data);
+      // Check response
+      if (response.status === 201) {
+        toast.success("Add product successfully 🎉", {
+          autoClose: 3000,
+        });
+      } else {
+        toast.error("Failed to add product 🙁", {
+          autoClose: 3000,
+        });
+      }
     } catch (error) {
       console.log(error);
-      toast.success("Add product failed 🙁", {
+      toast.error("Add product failed 🙁", {
         autoClose: 3000,
       });
     }

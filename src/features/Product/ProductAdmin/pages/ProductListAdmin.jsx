@@ -25,6 +25,7 @@ function ProductListAdmin() {
   const [currentPage, setCurrentPage] = useState(1);
   const limitItem = 5;
 
+  // Call API lấy dạnh sách sản phẩm
   useEffect(() => {
     (async () => {
       try {
