@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/Auth/userSlice";
 
 Header.propTypes = {
-  openFormLogin: PropTypes.func,
+  openForm: PropTypes.func,
 };
 
 const NAVIGATIONS = [
@@ -17,7 +17,7 @@ const NAVIGATIONS = [
   { id: 4, name: "Contact us", url: "/contact" },
 ];
 
-function Header({ openFormLogin }) {
+function Header({ openForm }) {
   const dispatch = useDispatch();
 
   const [isOpenedMenu, setOpenedMenu] = useState(false);
@@ -34,7 +34,6 @@ function Header({ openFormLogin }) {
         setOpenedMenu(false);
       }
     };
-
     // Thêm sự kiện lắng nghe cho cả trang
     document.addEventListener("mousedown", handleClickOutside);
 
@@ -45,14 +44,14 @@ function Header({ openFormLogin }) {
   }, [menuRef]);
 
   const handleClickLogin = () => {
-    openFormLogin();
+    openForm();
   };
 
   const toggleOpenMenu = () => {
     setOpenedMenu((prevState) => !prevState);
   };
 
-  const handleLogoutAccount = (event) => {
+  const handleLogoutAccount = () => {
     const action = logout();
     dispatch(action);
   };
@@ -98,19 +97,19 @@ function Header({ openFormLogin }) {
           >
             {/* <FaCircleUser className="text-2xl" /> */}
             <img
-              src="https://kenh14cdn.com/cPLqMkXoPs3Tkua5x0JnElZd2udVtV/Image/2015/03/updates/150330dep03-7ef68.jpg"
+              src="https://bloganchoi.com/wp-content/uploads/2022/02/avatar-trang-y-nghia.jpeg"
               alt="avatar"
               className="w-10 rounded-full"
             />
-            <span className="ml-2">Admin</span>
+            <span className="ml-2 truncate">{infoUser.fullName}</span>
             {isOpenedMenu && (
               <div className="absolute rounded top-[3rem] w-40 right-4 bg-white z-50 text-base list-nonedivide-y divide-gray-100  shadow dark:bg-gray-700 dark:divide-gray-600">
                 <div className="px-4 py-3">
                   <span className="block text-sm text-gray-900 dark:text-white">
-                    Admin
+                    {infoUser.fullName}
                   </span>
                   <span className="block text-sm  text-gray-500 truncate dark:text-gray-400">
-                    admin@gmail.com
+                    {infoUser.email}
                   </span>
                 </div>
                 <ul className="py-2 border-t border-solid">

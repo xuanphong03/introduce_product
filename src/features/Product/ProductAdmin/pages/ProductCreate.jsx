@@ -21,7 +21,6 @@ function ProductCreate(props) {
         });
       }
     } catch (error) {
-      console.log(error);
       toast.error("Add product failed 🙁", {
         autoClose: 3000,
       });

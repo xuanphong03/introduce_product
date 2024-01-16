@@ -45,8 +45,6 @@ function ProductListAdmin() {
   const currentProducts = productList.slice(startIndex, endIndex);
 
   const handleUpdateProduct = (product) => {
-    console.log("Data product before update: ", product);
-
     setSelectedProduct(product);
     setUpdatingProduct(true);
   };

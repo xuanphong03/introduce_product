@@ -1,32 +1,47 @@
 import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import Header from "./components/Header/Header";
-import Home from "./features/Home/Home";
-import Login from "./features/Auth/components/Login";
-import { ToastContainer } from "react-toastify";
-import PageNotFound from "./components/PageNotFound/PageNotFound";
-import ProductUser from "./features/Product/ProductUser/ProductUser";
 import { useSelector } from "react-redux";
-import ProductAdmin from "./features/Product/ProductAdmin/ProductAdmin";
+import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import Header from "./components/Header/Header";
 import NotHavePermissionAccess from "./components/NotHavePermissionAccess/NotHavePermissionAccess";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
+import Login from "./features/Auth/components/Login";
+import Register from "./features/Auth/components/Register";
+import Home from "./features/Home/Home";
+import ProductAdmin from "./features/Product/ProductAdmin/ProductAdmin";
+import ProductUser from "./features/Product/ProductUser/ProductUser";
+
+const MODE = {
+  LOGIN: "login",
+  REGISTER: "register",
+};
 
 function App() {
   const infoUser = useSelector((state) => state.user.current);
   const isLoggedIn = !!infoUser.id;
 
-  const [openFormLogin, setOpenFormLogin] = useState(false);
+  const [openForm, setOpenedForm] = useState(false);
+  const [currentMode, setCurrentMode] = useState(MODE.LOGIN);
 
-  const handleOpenFormLogin = () => {
-    setOpenFormLogin(true);
+  const handleOpenForm = () => {
+    setOpenedForm(true);
   };
 
-  const handleCLoseFormLogin = () => {
-    setOpenFormLogin(false);
+  const handleCLoseForm = () => {
+    setOpenedForm(false);
+  };
+
+  const handleChangeMode = () => {
+    if (currentMode === MODE.LOGIN) {
+      setCurrentMode(MODE.REGISTER);
+    } else {
+      setCurrentMode(MODE.LOGIN);
+    }
   };
 
   return (
     <div className="App relative">
-      <Header openFormLogin={handleOpenFormLogin} />
+      <Header openForm={handleOpenForm} />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -38,7 +53,15 @@ function App() {
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
       <ToastContainer />
-      {openFormLogin && <Login onCloseForm={handleCLoseFormLogin} />}
+      {openForm && currentMode === MODE.LOGIN && (
+        <Login onCloseForm={handleCLoseForm} onChangeForm={handleChangeMode} />
+      )}
+      {openForm && currentMode === MODE.REGISTER && (
+        <Register
+          onCloseForm={handleCLoseForm}
+          onChangeForm={handleChangeMode}
+        />
+      )}
     </div>
   );
 }

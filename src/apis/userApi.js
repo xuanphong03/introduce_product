@@ -6,8 +6,8 @@ const userApi = {
     return axiosClient.post(url, data);
   },
 
-  createProduct(data) {
-    const url = "/api/v1/add-ob";
+  register(data) {
+    const url = "/auth/local/register";
     return axiosClient.post(url, data);
   },
 };

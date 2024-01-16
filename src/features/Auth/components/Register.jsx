@@ -3,19 +3,23 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { login } from "../userSlice";
-import LoginForm from "./LoginForm";
+import { register } from "../userSlice";
+import RegisterForm from "./RegisterForm";
 
-function Login({ onCloseForm, onChangeForm }) {
+function Register({ onCloseForm, onChangeForm }) {
   const dispatch = useDispatch();
 
   const handleLoginFormSubmit = async (values) => {
     try {
-      const action = login(values);
+      // auto set username = email
+      values.username = values.email;
+
+      const action = register(values);
       const resultAction = await dispatch(action);
       const user = unwrapResult(resultAction);
-      console.log("Infor user:", user);
+      console.log("New user: ", user);
 
+      // Close form
       if (onCloseForm) {
         onCloseForm();
       }
@@ -24,7 +28,7 @@ function Login({ onCloseForm, onChangeForm }) {
     }
   };
   return (
-    <LoginForm
+    <RegisterForm
       onClose={onCloseForm}
       onChange={onChangeForm}
       onSubmit={handleLoginFormSubmit}
@@ -32,4 +36,4 @@ function Login({ onCloseForm, onChangeForm }) {
   );
 }
 
-export default Login;
+export default Register;

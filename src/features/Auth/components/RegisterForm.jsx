@@ -8,19 +8,35 @@ import { IoClose } from "react-icons/io5";
 import InputField from "../../../components/form-control/InputField/InputField";
 import PasswordField from "../../../components/form-control/PasswordField/PasswordField";
 
-LoginForm.propTypes = {
+RegisterForm.propTypes = {
   onClose: PropTypes.func,
   onSubmit: PropTypes.func,
-  onChange: PropTypes.func,
 };
 
-function LoginForm({ onClose, onSubmit, onChange }) {
+function RegisterForm({ onClose, onSubmit, onChange }) {
   const schema = yup.object().shape({
-    identifier: yup
+    fullName: yup
+      .string()
+      .required("Please enter your full name.")
+      .test(
+        "Should has at least two words",
+        "Please enter at least two words.",
+        (value) => {
+          return value.trim().split(" ").length >= 2;
+        }
+      ),
+    email: yup
       .string()
       .required("Please enter your email.")
       .email("Please enter a valid email."),
-    password: yup.string().required("Please enter your password."),
+    password: yup
+      .string()
+      .required("Please enter your password.")
+      .min(6, "Please enter at least 6 characters."),
+    retypePassword: yup
+      .string()
+      .required("Please retype your password.")
+      .oneOf([yup.ref("password")], "Password does not match"),
   });
 
   const {
@@ -43,7 +59,7 @@ function LoginForm({ onClose, onSubmit, onChange }) {
     }
   };
 
-  const handleChangeForm = () => {
+  const handleChangForm = () => {
     if (onChange) {
       onChange();
     }
@@ -57,15 +73,22 @@ function LoginForm({ onClose, onSubmit, onChange }) {
           className="absolute top-2 right-2 text-3xl rounded-full hover:bg-gray-200 cursor-pointer"
         />
         <h1 className="text-3xl font-semibold text-center text-purple-700">
-          Sign in
+          Register
         </h1>
         <form className="mt-6" onSubmit={handleSubmit(formSubmit)}>
           <InputField
-            id="identifier"
+            id="fullName"
+            label="Full name"
+            placeholder="Enter your full name..."
+            register={{ ...register("fullName") }}
+            errorMessage={errors.fullName?.message}
+          />
+          <InputField
+            id="email"
             label="Email"
             placeholder="Enter your email..."
-            register={{ ...register("identifier") }}
-            errorMessage={errors.identifier?.message}
+            register={{ ...register("email") }}
+            errorMessage={errors.email?.message}
           />
           <PasswordField
             id="password"
@@ -74,25 +97,28 @@ function LoginForm({ onClose, onSubmit, onChange }) {
             register={{ ...register("password") }}
             errorMessage={errors.password?.message}
           />
+          <PasswordField
+            id="retypePassword"
+            label="Retype password"
+            placeholder="Retype password again..."
+            register={{ ...register("retypePassword") }}
+            errorMessage={errors.retypePassword?.message}
+          />
 
-          <a href="/" className="text-xs text-purple-600 hover:underline">
-            Forget Password?
-          </a>
           <div className="mt-6">
             <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-purple-700 rounded-md hover:bg-purple-600 focus:outline-none focus:bg-purple-600">
-              Login
+              Register
             </button>
           </div>
         </form>
 
         <p className="mt-8 text-xs font-light text-center text-gray-700">
-          {" "}
-          Don't have an account?{" "}
+          You already have an account?{" "}
           <span
-            onClick={handleChangeForm}
+            onClick={handleChangForm}
             className="font-medium text-purple-600 hover:underline cursor-pointer"
           >
-            Sign up
+            Login here
           </span>
         </p>
       </div>
@@ -100,4 +126,4 @@ function LoginForm({ onClose, onSubmit, onChange }) {
   );
 }
 
-export default LoginForm;
+export default RegisterForm;

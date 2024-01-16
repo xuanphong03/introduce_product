@@ -3,9 +3,18 @@ import userApi from "../../apis/userApi";
 import StorageKeys from "../../constants/storage-key";
 
 // First, create the thunk
+export const register = createAsyncThunk("user/register", async (payload) => {
+  const data = await userApi.register(payload);
+
+  // save data to local storage
+  localStorage.setItem(StorageKeys.TOKEN, data.jwt);
+  localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
+
+  return data.user;
+});
+
 export const login = createAsyncThunk("user/login", async (payload) => {
   const data = await userApi.login(payload);
-  console.log("Data login return: ", data);
 
   // save data to local storage
   localStorage.setItem(StorageKeys.TOKEN, data.jwt);
@@ -31,6 +40,9 @@ const userSlice = createSlice({
   },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
+      state.current = action.payload;
+    },
+    [register.fulfilled]: (state, action) => {
       state.current = action.payload;
     },
   },
