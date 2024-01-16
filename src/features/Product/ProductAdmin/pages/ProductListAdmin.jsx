@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { MdDeleteOutline, MdOutlineCreate } from "react-icons/md";
 import ProductUpdate from "./ProductUpdate";
+import productApi from "../../../../apis/productApi";
 
 ProductListAdmin.propTypes = {
   productList: PropTypes.array.isRequired,
@@ -17,11 +18,23 @@ const PRODUCT_HEADER_LABEL = [
   { id: 7, name: "Action" },
 ];
 
-function ProductListAdmin({ productList = [] }) {
+function ProductListAdmin() {
+  const [productList, setProductList] = useState([]);
   const [updatingProduct, setUpdatingProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const limitItem = 5;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await productApi.getAll();
+        setProductList(data);
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    })();
+  }, [productList]);
 
   // Tính toán chỉ mục bắt đầu và kết thúc cho trang hiện tại
   const startIndex = (currentPage - 1) * limitItem;
