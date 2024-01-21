@@ -10,6 +10,7 @@ import Register from "./features/Auth/components/Register";
 import Home from "./features/Home/Home";
 import ProductAdmin from "./features/Product/ProductAdmin/ProductAdmin";
 import ProductUser from "./features/Product/ProductUser/ProductUser";
+import Footer from "./components/Footer/Footer";
 
 const MODE = {
   LOGIN: "login",
@@ -40,7 +41,7 @@ function App() {
   };
 
   return (
-    <div className="App relative">
+    <div className="App relative bg-gray-200">
       <Header openForm={handleOpenForm} />
 
       <Routes>
@@ -62,6 +63,8 @@ function App() {
           onChangeForm={handleChangeMode}
         />
       )}
+
+      <Footer />
     </div>
   );
 }

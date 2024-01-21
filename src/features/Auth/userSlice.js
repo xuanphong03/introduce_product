@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userApi from "../../apis/userApi";
 import StorageKeys from "../../constants/storage-key";
+import uuid from "react-uuid";
 
 // First, create the thunk
 export const register = createAsyncThunk("user/register", async (payload) => {
@@ -28,6 +29,11 @@ const userSlice = createSlice({
   initialState: {
     current: JSON.parse(localStorage.getItem(StorageKeys.USER)) || {},
     setting: {},
+    cart: {
+      totalItem: 0,
+      totalCost: 0,
+      items: [],
+    },
   },
   reducers: {
     logout(state) {
@@ -36,6 +42,22 @@ const userSlice = createSlice({
       localStorage.clear(StorageKeys.USER);
 
       state.current = {};
+    },
+
+    addProductToCart(state, action) {
+      const product = action.payload;
+
+      if (product) {
+        const newItem = {
+          id: uuid(),
+          name: product.name,
+          price: product.price,
+        };
+
+        state.cart.items.push(newItem);
+        state.cart.totalItem += 1;
+        state.cart.totalCost += product.price;
+      }
     },
   },
   extraReducers: {
@@ -52,4 +74,4 @@ const userSlice = createSlice({
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions
 const { actions, reducer } = userSlice;
 export default reducer;
-export const { logout } = actions;
+export const { logout, addProductToCart } = actions;

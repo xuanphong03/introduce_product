@@ -1,10 +1,14 @@
 import React from "react";
 import FormUpdateProduct from "./FormUpdateProduct";
 import { toast } from "react-toastify";
+import productApi from "../../../../apis/productApi";
 
 function ProductUpdate({ product, closeForm }) {
-  const handleUpdateProduct = (data) => {
+  const handleUpdateProduct = async (data) => {
     try {
+      // Call API update ở chỗ này
+      // const response = await productApi.updateProduct(data);
+
       closeForm();
       console.log("Data product after update: ", data);
 

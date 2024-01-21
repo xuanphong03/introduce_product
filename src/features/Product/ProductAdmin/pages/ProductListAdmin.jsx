@@ -3,10 +3,18 @@ import PropTypes from "prop-types";
 import { MdDeleteOutline, MdOutlineCreate } from "react-icons/md";
 import ProductUpdate from "./ProductUpdate";
 import productApi from "../../../../apis/productApi";
+import { useSelector } from "react-redux";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Pagination,
+} from "@mui/material";
 
-ProductListAdmin.propTypes = {
-  productList: PropTypes.array.isRequired,
-};
+ProductListAdmin.propTypes = {};
 
 const PRODUCT_HEADER_LABEL = [
   { id: 1, name: "Name" },
@@ -19,23 +27,50 @@ const PRODUCT_HEADER_LABEL = [
 ];
 
 function ProductListAdmin() {
-  const [productList, setProductList] = useState([]);
+  const { product_list } = useSelector((state) => state.products);
+  const [open, setOpen] = React.useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
+  const handleClickOpen = (product) => {
+    setProductToDelete(product);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setProductToDelete(null);
+    setOpen(false);
+  };
+
+  const handleDeleteProduct = async () => {
+    // Gọi API delete product ở đây
+    if (productToDelete) {
+      // const res = await productApi.removeProduct(productToDelete.id);
+      // Add any additional logic after deletion if needed
+      console.log("Product deleted:", productToDelete);
+      // Reset the productToDelete state
+      setProductToDelete(null);
+      // Close the confirmation dialog
+      setOpen(false);
+    }
+  };
+
+  const [productList, setProductList] = useState(product_list);
   const [updatingProduct, setUpdatingProduct] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const limitItem = 5;
 
   // Call API lấy dạnh sách sản phẩm
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await productApi.getAll();
-        setProductList(data);
-      } catch (error) {
-        console.log("Error: ", error);
-      }
-    })();
-  }, [productList]);
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const { data } = await productApi.getAll();
+  //       setProductList(data);
+  //     } catch (error) {
+  //       console.log("Error: ", error);
+  //     }
+  //   })();
+  // }, [productList]);
 
   // Tính toán chỉ mục bắt đầu và kết thúc cho trang hiện tại
   const startIndex = (currentPage - 1) * limitItem;
@@ -106,7 +141,10 @@ function ProductListAdmin() {
                         Edit
                       </span>
                     </div>
-                    <div className="flex items-center p-1 hover:underline cursor-pointer">
+                    <div
+                      onClick={() => handleClickOpen(product)}
+                      className="flex items-center p-1 hover:underline cursor-pointer"
+                    >
                       <MdDeleteOutline className="mr-1 text-lg" />
                       <span className="font-medium text-red-600 dark:text-red-500 ">
                         Remove
@@ -120,36 +158,34 @@ function ProductListAdmin() {
         </table>
       </div>
 
-      {/* Phân trang */}
-      <div className="flex justify-end mt-4 items-center">
-        <button
-          className={`px-3 py-2 bg-blue-500 text-white rounded min-w-[85px] ${
-            currentPage === 1 ? "bg-gray-400 text-white" : ""
-          }`}
-          onClick={() =>
-            setCurrentPage((prevPage) => Math.max(prevPage - 1, 1))
-          }
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span className="mx-2">{`Page ${currentPage}`}</span>
-        <button
-          className={`px-3 py-2 bg-blue-500 text-white rounded min-w-[85px] ${
-            currentPage === Math.ceil(productList.length / limitItem)
-              ? "bg-gray-400 text-white"
-              : ""
-          }`}
-          onClick={() =>
-            setCurrentPage((prevPage) =>
-              Math.min(prevPage + 1, Math.ceil(productList.length / limitItem))
-            )
-          }
-          disabled={currentPage === Math.ceil(productList.length / limitItem)}
-        >
-          Next
-        </button>
-      </div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Comfirm remove product"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you really want to remove this product from the product list?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleDeleteProduct} autoFocus>
+            Comfirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Pagination
+        className="mt-4 flex justify-center"
+        count={10}
+        variant="outlined"
+        shape="rounded"
+      />
     </div>
   );
 }

@@ -1,14 +1,16 @@
 import React from "react";
-import PropTypes from "prop-types";
+import Banner from "./components/Banner";
+import NewArrivals from "./components/NewArrivals";
+import Collections from "./components/Collections";
+import Contact from "./components/Contact";
 
-import Banner from "./components/Banner/Banner";
-
-Home.propTypes = {};
-
-function Home(props) {
+function Home() {
   return (
-    <div>
+    <div className="bg-gray-200 pt-[var(--height-header)]">
       <Banner />
+      <NewArrivals />
+      <Collections />
+      <Contact />
     </div>
   );
 }

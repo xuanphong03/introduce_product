@@ -7,6 +7,7 @@ import React from "react";
 import InputField from "../../../../components/form-control/InputField/InputField";
 import SelectField from "../../../../components/form-control/SelectField/SelectField";
 import TextAreaField from "../../../../components/form-control/TextAreaField/TextAreaField";
+import { LinearProgress } from "@mui/material";
 
 FormCreateProduct.propTypes = {
   onSubmit: PropTypes.func,
@@ -38,7 +39,7 @@ function FormCreateProduct({ onSubmit }) {
     handleSubmit,
     register,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -52,6 +53,11 @@ function FormCreateProduct({ onSubmit }) {
 
   return (
     <div className="min-[400px] relative bg-white mx-auto mt-2 w-3/4 px-8 pt-2 pb-14 rounded-md">
+      {isSubmitting && (
+        <LinearProgress
+          sx={{ position: "absolute", top: 0, left: 0, right: 0 }}
+        />
+      )}
       <h2 className="uppercase font-semibold text-xl text-center">
         Create new product
       </h2>

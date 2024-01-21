@@ -29,6 +29,34 @@ const productApi = {
       throw error;
     }
   },
+
+  removeProduct(id) {
+    try {
+      const url = `/api/v1/delete-ob/${id}`;
+      return axiosClient.post(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(StorageKeys.TOKEN)}`,
+        },
+      });
+    } catch (error) {
+      // Xử lý các lỗi
+      throw error;
+    }
+  },
+
+  updateProduct(data) {
+    try {
+      const url = `/api/v1/update-ob/${data.id}`;
+      return axiosClient.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(StorageKeys.TOKEN)}`,
+        },
+      });
+    } catch (error) {
+      // Xử lý các lỗi
+      throw error;
+    }
+  },
 };
 
 export default productApi;

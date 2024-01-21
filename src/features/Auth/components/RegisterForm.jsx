@@ -7,6 +7,7 @@ import React from "react";
 import { IoClose } from "react-icons/io5";
 import InputField from "../../../components/form-control/InputField/InputField";
 import PasswordField from "../../../components/form-control/PasswordField/PasswordField";
+import { LinearProgress } from "@mui/material";
 
 RegisterForm.propTypes = {
   onClose: PropTypes.func,
@@ -42,7 +43,7 @@ function RegisterForm({ onClose, onSubmit, onChange }) {
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -68,6 +69,11 @@ function RegisterForm({ onClose, onSubmit, onChange }) {
   return (
     <div className="absolute top-0 left-0 right-0 flex flex-col justify-center min-h-screen overflow-hidden">
       <div className="relative w-full p-6 m-auto bg-white rounded-md shadow-md max-w-xl">
+        {isSubmitting && (
+          <LinearProgress
+            sx={{ position: "absolute", top: 0, left: 0, right: 0 }}
+          />
+        )}
         <IoClose
           onClick={handleClose}
           className="absolute top-2 right-2 text-3xl rounded-full hover:bg-gray-200 cursor-pointer"

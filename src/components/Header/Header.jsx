@@ -5,6 +5,8 @@ import Logo from "../../assets/images/logo.png";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/Auth/userSlice";
+import { Badge } from "@mui/material";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 Header.propTypes = {
   openForm: PropTypes.func,
@@ -14,14 +16,13 @@ const NAVIGATIONS = [
   { id: 1, name: "Home", url: "/" },
   { id: 2, name: "About", url: "/about" },
   { id: 3, name: "Products", url: "/products" },
-  { id: 4, name: "Contact us", url: "/contact" },
 ];
 
 function Header({ openForm }) {
   const dispatch = useDispatch();
 
   const [isOpenedMenu, setOpenedMenu] = useState(false);
-
+  const { totalItem } = useSelector((state) => state.user.cart);
   const infoUser = useSelector((state) => state.user.current);
   const isLoggedIn = !!infoUser.id;
 
@@ -57,28 +58,34 @@ function Header({ openForm }) {
   };
 
   return (
-    <div className="flex bg-slate-400 justify-between items-center px-12 h-[var(--height-header)]">
-      <Link to="/" className="block font-extrabold text-2xl mr-12">
-        <img src={Logo} alt="" className=" lg:hidden w-16 h-16" />
-        <span className="hidden lg:block leading-[var(--height-header)]">
-          MICHAEL WATCH
-        </span>
-      </Link>
-      <ul className="flex items-center">
-        {NAVIGATIONS.map((nav) => (
-          <NavLink
-            key={nav.id}
-            className={({ isActive }) =>
-              `uppercase font-medium px-6 py-2 hover:bg-purple-700 hover:text-white rounded-md mx-[2px] ${
-                isActive ? "bg-purple-700 text-white" : ""
-              }`
-            }
-            to={nav.url}
-          >
-            {nav.name}
-          </NavLink>
-        ))}
-
+    <div className="flex fixed top-0 left-0 right-0 z-50 justify-between bg-slate-400  items-center px-12 h-[var(--height-header)]">
+      <div className="flex items-center">
+        <Link to="/" className="block font-extrabold text-2xl mr-12">
+          <img src={Logo} alt="" className=" lg:hidden w-16 h-16" />
+          <span className="hidden lg:block leading-[var(--height-header)]">
+            MICHAEL WATCH
+          </span>
+        </Link>
+        <ul className="flex justify-start items-center">
+          {NAVIGATIONS.map((nav) => (
+            <NavLink
+              key={nav.id}
+              className={({ isActive }) =>
+                `uppercase font-medium px-6 py-2 hover:bg-purple-700 hover:text-white rounded-md mx-[2px] ${
+                  isActive ? "bg-purple-700 text-white" : ""
+                }`
+              }
+              to={nav.url}
+            >
+              {nav.name}
+            </NavLink>
+          ))}
+        </ul>
+      </div>
+      <div className="flex items-center">
+        <Badge className="mr-2" badgeContent={totalItem} color="primary">
+          <ShoppingCartIcon color="action" />
+        </Badge>
         {!isLoggedIn && (
           <div
             className="flex items-center text-lg cursor-pointer px-6 py-[6px] ml-[2px] hover:bg-purple-700 hover:text-white rounded-md"
@@ -95,7 +102,6 @@ function Header({ openForm }) {
             onClick={toggleOpenMenu}
             className="relative flex items-center px-6 py-[6px] text-lg cursor-pointer"
           >
-            {/* <FaCircleUser className="text-2xl" /> */}
             <img
               src="https://bloganchoi.com/wp-content/uploads/2022/02/avatar-trang-y-nghia.jpeg"
               alt="avatar"
@@ -134,7 +140,7 @@ function Header({ openForm }) {
             )}
           </div>
         )}
-      </ul>
+      </div>
     </div>
   );
 }
