@@ -7,7 +7,7 @@ function ProductUpdate({ product, closeForm }) {
   const handleUpdateProduct = async (data) => {
     try {
       // Call API update ở chỗ này
-      // const response = await productApi.updateProduct(data);
+      const response = await productApi.updateProduct(data);
 
       closeForm();
       console.log("Data product after update: ", data);
@@ -17,14 +17,18 @@ function ProductUpdate({ product, closeForm }) {
       });
     } catch (error) {
       console.log(error);
-      toast.success("Add product failed 🙁", {
+      toast.error("Update product failed 🙁", {
         autoClose: 3000,
       });
     }
   };
   return (
     <div className="col-span-11 md:col-span-10 px-6 py-2 bg-gray-200">
-      <FormUpdateProduct product={product} onSubmit={handleUpdateProduct} />
+      <FormUpdateProduct
+        product={product}
+        onClose={closeForm}
+        onSubmit={handleUpdateProduct}
+      />
     </div>
   );
 }

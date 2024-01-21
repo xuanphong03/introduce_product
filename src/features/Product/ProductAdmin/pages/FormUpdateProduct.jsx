@@ -8,9 +8,11 @@ import InputField from "../../../../components/form-control/InputField/InputFiel
 import SelectField from "../../../../components/form-control/SelectField/SelectField";
 import TextAreaField from "../../../../components/form-control/TextAreaField/TextAreaField";
 import { LinearProgress } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 FormUpdateProduct.propTypes = {
   onSubmit: PropTypes.func,
+  onClose: PropTypes.func,
   product: PropTypes.object.isRequired,
 };
 
@@ -26,7 +28,7 @@ const BRAND_LIST = [
 ];
 const COUNTRY_LIST = ["USA", "Japan", "China", "Korea", "UK", "Switzerland"];
 
-function FormUpdateProduct({ onSubmit, product }) {
+function FormUpdateProduct({ onSubmit, onClose, product }) {
   const schema = yup.object().shape({
     name: yup.string().required("Please enter product name."),
     price: yup
@@ -50,6 +52,10 @@ function FormUpdateProduct({ onSubmit, product }) {
     }
   };
 
+  const handleCloseForm = () => {
+    if (onClose) onClose();
+  };
+
   return (
     <div className="z-50 min-[400px] absolute bg-white mx-auto mt-2 w-2/3 xl:w-1/2 px-8 pt-2 pb-14 rounded-md left-0 right-0 border border-solid border-black">
       {isSubmitting && (
@@ -57,6 +63,10 @@ function FormUpdateProduct({ onSubmit, product }) {
           sx={{ position: "absolute", top: 0, left: 0, right: 0 }}
         />
       )}
+      <CloseIcon
+        onClick={handleCloseForm}
+        className="absolute top-2 right-2 cursor-pointer text-xl"
+      />
       <h2 className="uppercase font-semibold text-xl text-center">
         Update Product: {product.name}
       </h2>
