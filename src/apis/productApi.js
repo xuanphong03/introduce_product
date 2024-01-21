@@ -2,13 +2,14 @@ import StorageKeys from "../constants/storage-key";
 import axiosClient from "./axiosClient";
 
 const productApi = {
-  getAll() {
+  getAll(params) {
     try {
-      const url = "/api/v1/admin/list-ob";
+      const url = `/api/v1/admin/list-ob`;
       return axiosClient.get(url, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(StorageKeys.TOKEN)}`,
         },
+        params: params,
       });
     } catch (error) {
       // Xử lý các lỗi

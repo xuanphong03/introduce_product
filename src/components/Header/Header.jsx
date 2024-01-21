@@ -5,8 +5,12 @@ import Logo from "../../assets/images/logo.png";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/Auth/userSlice";
-import { Badge } from "@mui/material";
+import { Badge, Button, ClickAwayListener, Tooltip } from "@mui/material";
+import HeadlessTippy from "@tippyjs/react/headless";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Cart from "../Cart/CartList";
+import CartList from "../Cart/CartList";
+import CartEmty from "../Cart/CartEmty";
 
 Header.propTypes = {
   openForm: PropTypes.func,
@@ -22,8 +26,11 @@ function Header({ openForm }) {
   const dispatch = useDispatch();
 
   const [isOpenedMenu, setOpenedMenu] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+
   const { totalItem } = useSelector((state) => state.user.cart);
   const infoUser = useSelector((state) => state.user.current);
+
   const isLoggedIn = !!infoUser.id;
 
   const menuRef = useRef(null);
@@ -31,18 +38,18 @@ function Header({ openForm }) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        // Bấm ra ngoài menu, đóng menu
         setOpenedMenu(false);
       }
     };
-    // Thêm sự kiện lắng nghe cho cả trang
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
-      // Gỡ bỏ sự kiện lắng nghe khi component unmount
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuRef]);
+
+  const handleToggleShowCart = () => {
+    setShowCart((prev) => !prev);
+  };
 
   const handleClickLogin = () => {
     openForm();
@@ -83,9 +90,27 @@ function Header({ openForm }) {
         </ul>
       </div>
       <div className="flex items-center">
-        <Badge className="mr-2" badgeContent={totalItem} color="primary">
-          <ShoppingCartIcon color="action" />
-        </Badge>
+        <HeadlessTippy
+          render={(attrs) => (
+            <div tabIndex="-1" {...attrs}>
+              {totalItem === 0 ? <CartEmty /> : <CartList />}
+            </div>
+          )}
+          placement="bottom-end"
+          onClickOutside={handleToggleShowCart}
+          visible={showCart}
+          interactive
+        >
+          <Badge
+            onClick={handleToggleShowCart}
+            className="mr-2"
+            badgeContent={totalItem}
+            color="primary"
+          >
+            <ShoppingCartIcon color="action" />
+          </Badge>
+        </HeadlessTippy>
+
         {!isLoggedIn && (
           <div
             className="flex items-center text-lg cursor-pointer px-6 py-[6px] ml-[2px] hover:bg-purple-700 hover:text-white rounded-md"

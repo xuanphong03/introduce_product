@@ -29,7 +29,7 @@ const userSlice = createSlice({
   initialState: {
     current: JSON.parse(localStorage.getItem(StorageKeys.USER)) || {},
     setting: {},
-    cart: {
+    cart: JSON.parse(localStorage.getItem(StorageKeys.CART)) || {
       totalItem: 0,
       totalCost: 0,
       items: [],
@@ -40,8 +40,14 @@ const userSlice = createSlice({
       // clear local storage
       localStorage.clear(StorageKeys.TOKEN);
       localStorage.clear(StorageKeys.USER);
+      localStorage.clear(StorageKeys.CART);
 
       state.current = {};
+      state.cart = {
+        totalItem: 0,
+        totalCost: 0,
+        items: [],
+      };
     },
 
     addProductToCart(state, action) {
@@ -57,6 +63,9 @@ const userSlice = createSlice({
         state.cart.items.push(newItem);
         state.cart.totalItem += 1;
         state.cart.totalCost += product.price;
+
+        // Lưu vào localStorage
+        localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
       }
     },
   },

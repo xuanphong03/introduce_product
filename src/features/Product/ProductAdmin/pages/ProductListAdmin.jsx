@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import { MdDeleteOutline, MdOutlineCreate } from "react-icons/md";
 import ProductUpdate from "./ProductUpdate";
 import productApi from "../../../../apis/productApi";
-import { useSelector } from "react-redux";
 import {
   Button,
   Dialog,
@@ -13,8 +11,7 @@ import {
   DialogTitle,
   Pagination,
 } from "@mui/material";
-
-ProductListAdmin.propTypes = {};
+import { useSelector } from "react-redux";
 
 const PRODUCT_HEADER_LABEL = [
   { id: 1, name: "Name" },
@@ -27,9 +24,22 @@ const PRODUCT_HEADER_LABEL = [
 ];
 
 function ProductListAdmin() {
+  const [productList, setProductList] = useState([]);
   const { product_list } = useSelector((state) => state.products);
+  const [updatingProduct, setUpdatingProduct] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
+
+  // Calculate the index range for the current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = product_list.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   const handleClickOpen = (product) => {
     setProductToDelete(product);
@@ -54,12 +64,6 @@ function ProductListAdmin() {
     }
   };
 
-  const [productList, setProductList] = useState(product_list);
-  const [updatingProduct, setUpdatingProduct] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const limitItem = 5;
-
   // Call API lấy dạnh sách sản phẩm
   // useEffect(() => {
   //   (async () => {
@@ -71,13 +75,6 @@ function ProductListAdmin() {
   //     }
   //   })();
   // }, [productList]);
-
-  // Tính toán chỉ mục bắt đầu và kết thúc cho trang hiện tại
-  const startIndex = (currentPage - 1) * limitItem;
-  const endIndex = startIndex + limitItem;
-
-  // Lấy danh sách sản phẩm cho trang hiện tại
-  const currentProducts = productList.slice(startIndex, endIndex);
 
   const handleUpdateProduct = (product) => {
     setSelectedProduct(product);
@@ -182,9 +179,11 @@ function ProductListAdmin() {
 
       <Pagination
         className="mt-4 flex justify-center"
-        count={10}
+        count={Math.ceil(product_list.length / productsPerPage)}
+        page={currentPage}
         variant="outlined"
         shape="rounded"
+        onChange={(event, value) => setCurrentPage(value)}
       />
     </div>
   );

@@ -19,14 +19,12 @@ function ProductFilter({ onChange }) {
 
   const handlePriceChange = (newRangePriceFilters) => {
     if (onChange) {
-      console.log(newRangePriceFilters);
       onChange(newRangePriceFilters);
     }
   };
 
   const handleSearchChange = (keyword) => {
     if (onChange) {
-      console.log("search: ", keyword);
       onChange({
         search: keyword,
       });

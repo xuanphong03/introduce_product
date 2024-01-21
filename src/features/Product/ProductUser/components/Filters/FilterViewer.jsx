@@ -10,7 +10,10 @@ const FILTER_LIST = [
     id: 1,
     getLabel: (filters) => `Key search: ${filters["search"]}`,
     isActive: (filters) => true,
-    isVisible: () => true,
+    isVisible: (filters) => {
+      console.log(filters);
+      return true;
+    },
     isRemovable: true,
     onRemove: (filters) => {
       const newFilters = { ...filters };
@@ -22,11 +25,11 @@ const FILTER_LIST = [
   {
     id: 2,
     getLabel: (filters) => {
-      const gte_price = Number(filters.salePrice_gte).toLocaleString("en-US", {
+      const gte_price = Number(filters.price_gte).toLocaleString("en-US", {
         style: "currency",
         currency: "USD",
       });
-      const lte_price = Number(filters.salePrice_lte).toLocaleString("en-US", {
+      const lte_price = Number(filters.price_lte).toLocaleString("en-US", {
         style: "currency",
         currency: "USD",
       });
@@ -34,8 +37,8 @@ const FILTER_LIST = [
     },
     isActive: () => true,
     isVisible: (filters) => {
-      //  return ( Object.keys(filters).includes("salePrice_lte") &&
-      //  Object.keys(filters).includes("salePrice_gte"))
+      //  return ( Object.keys(filters).includes("price_lte") &&
+      //  Object.keys(filters).includes("price_gte"))
       return true;
     },
     isRemovable: true,
@@ -54,7 +57,7 @@ const FILTER_LIST = [
       if (brand) {
         return `Brand: ${brand}`;
       } else {
-        return "Brand not exists";
+        return "All brand";
       }
     },
     isActive: () => true,

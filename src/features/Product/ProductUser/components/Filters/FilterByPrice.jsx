@@ -21,7 +21,7 @@ function FilterByPrice({ onChange }) {
 
   const handleSubmit = () => {
     if (onChange) {
-      console.log(salePrices);
+      console.log("Filter by price:", salePrices);
       onChange(salePrices);
     }
     setSalePrices({

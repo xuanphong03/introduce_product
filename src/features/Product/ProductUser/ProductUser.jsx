@@ -18,17 +18,21 @@ function ProductUser(props) {
     const params = queryString.parse(location.search);
     return {
       ...params,
-      _page: Number.parseInt(params._page) || 1,
       _limit: Number.parseInt(params._limit) || 12,
     };
   }, [location.search]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const { product_list } = useSelector((state) => state.products);
+  // Calculate the index range for the current page
+  const indexOfLastProduct = currentPage * 15;
+  const indexOfFirstProduct = indexOfLastProduct - 15;
+  const currentProducts = product_list.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
   const [productList, setProductList] = useState([]);
-  // const [fetched, setFetched] = useState(false);
-  const [loading, setLoading] = useState(true);
-
   const [pagination, setPagination] = useState({
-    page: 1,
     limit: 10,
     total: 10,
   });
@@ -36,23 +40,20 @@ function ProductUser(props) {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await productApi.getAll(queryParams);
+        const { data, pagination } = await productApi.getAll(queryParams);
+        console.log("data", data);
+
         setProductList(data);
-        // setFetched(true);
-        window.scrollTo(0, 0);
+        setPagination(pagination);
       } catch (error) {
         console.log("Error: ", error);
       }
-      setLoading(false);
     })();
   }, [queryParams]);
 
   const handlePageChange = (event, page) => {
-    const filters = {
-      ...queryParams,
-      _page: page,
-    };
-    navigate(`/?${queryString.stringify(filters)}`);
+    window.scrollTo(0, 0);
+    setCurrentPage(page);
   };
 
   const handleFiltersChange = (newFilters) => {
@@ -60,20 +61,15 @@ function ProductUser(props) {
       ...queryParams,
       ...newFilters,
     };
-    navigate(`/?${queryString.stringify(filters)}`);
+    navigate(`/products/?${queryString.stringify(filters)}`);
   };
 
   const setNewFilters = (newFilters) => {
-    navigate(`/?${queryString.stringify(newFilters)}`);
+    navigate(`/products/?${queryString.stringify(newFilters)}`);
   };
 
-  const handleAddToCard = () => {};
-
-  const { product_list } = useSelector((state) => state.products);
-  console.log(product_list);
-
   return (
-    <div className="pt-[var(--height-header)] grid grid-cols-12 gap-6 mx-6 mt-6">
+    <div className="pt-[var(--height-header)] grid grid-cols-12 gap-6 mx-6 mt-6 pb-12">
       <div className="col-span-3">
         <ProductFilter filters={queryParams} onChange={handleFiltersChange} />
       </div>
@@ -82,7 +78,7 @@ function ProductUser(props) {
           <FilterViewer filters={queryParams} onChange={setNewFilters} />
         </div>
         <div className="mt-2 grid grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-x-3 gap-y-5 ">
-          {product_list.map((product) => {
+          {currentProducts.map((product) => {
             return <ProductItem key={product.id} product={product} />;
           })}
         </div>
@@ -96,7 +92,7 @@ function ProductUser(props) {
           }}
         >
           <Pagination
-            count={Math.ceil(pagination.total / pagination.limit)}
+            count={Math.ceil(product_list.length / 15)}
             page={pagination.page}
             onChange={handlePageChange}
             color="primary"
