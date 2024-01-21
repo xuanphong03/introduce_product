@@ -9,6 +9,7 @@ import SelectField from "../../../../components/form-control/SelectField/SelectF
 import TextAreaField from "../../../../components/form-control/TextAreaField/TextAreaField";
 import { LinearProgress } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { useSelector } from "react-redux";
 
 FormUpdateProduct.propTypes = {
   onSubmit: PropTypes.func,
@@ -16,19 +17,11 @@ FormUpdateProduct.propTypes = {
   product: PropTypes.object.isRequired,
 };
 
-const COLOR_LIST = ["White", "Black", "Red", "Silver"];
-const BRAND_LIST = [
-  "Rolex",
-  "Casio",
-  "Cartier",
-  "Calvin Klein",
-  "Longines",
-  "Jaeger-LeCoultre",
-  "Apple",
-];
-const COUNTRY_LIST = ["USA", "Japan", "China", "Korea", "UK", "Switzerland"];
-
 function FormUpdateProduct({ onSubmit, onClose, product }) {
+  const { color_list, brand_list, country_list } = useSelector(
+    (state) => state.products
+  );
+
   const schema = yup.object().shape({
     name: yup.string().required("Please enter product name."),
     price: yup
@@ -119,7 +112,7 @@ function FormUpdateProduct({ onSubmit, onClose, product }) {
                   value: product.color,
                 }),
               }}
-              options={COLOR_LIST}
+              options={color_list}
             />
 
             <SelectField
@@ -130,7 +123,7 @@ function FormUpdateProduct({ onSubmit, onClose, product }) {
                   value: product.brand,
                 }),
               }}
-              options={BRAND_LIST}
+              options={brand_list}
             />
 
             <SelectField
@@ -141,7 +134,7 @@ function FormUpdateProduct({ onSubmit, onClose, product }) {
                   value: product.country,
                 }),
               }}
-              options={COUNTRY_LIST}
+              options={country_list}
             />
           </div>
 
