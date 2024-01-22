@@ -1,15 +1,16 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { FaRegUser } from "react-icons/fa";
-import Logo from "../../assets/images/logo.png";
-import PropTypes from "prop-types";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../features/Auth/userSlice";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Badge } from "@mui/material";
 import HeadlessTippy from "@tippyjs/react/headless";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CartList from "../Cart/CartList";
+import PropTypes from "prop-types";
+import React, { useEffect, useRef, useState } from "react";
+import { FaRegUser } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
+import Logo from "../../assets/images/logo.png";
+import StorageKeys from "../../constants/storage-key";
+import { logout } from "../../features/Auth/userSlice";
 import CartEmty from "../Cart/CartEmty";
+import CartList from "../Cart/CartList";
 
 Header.propTypes = {
   openForm: PropTypes.func,
@@ -106,7 +107,7 @@ function Header({ openForm }) {
               badgeContent={totalItem}
               color="primary"
             >
-              <ShoppingCartIcon color="action" />
+              <ShoppingCartIcon fontSize="medium" color="action" />
             </Badge>
           </HeadlessTippy>
         )}
@@ -128,9 +129,13 @@ function Header({ openForm }) {
             className="relative flex items-center px-6 py-[6px] text-lg cursor-pointer"
           >
             <img
-              src="https://bloganchoi.com/wp-content/uploads/2022/02/avatar-trang-y-nghia.jpeg"
+              src={
+                localStorage.getItem(StorageKeys.AVATAR)
+                  ? localStorage.getItem(StorageKeys.AVATAR)
+                  : "https://bloganchoi.com/wp-content/uploads/2022/02/avatar-trang-y-nghia.jpeg"
+              }
               alt="avatar"
-              className="w-10 rounded-full"
+              className="w-11 h-11 rounded-full"
             />
             <span className="ml-2 truncate">{infoUser.fullName}</span>
             {isOpenedMenu && (

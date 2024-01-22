@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userApi from "../../apis/userApi";
 import StorageKeys from "../../constants/storage-key";
+import axios from "axios";
 
 // First, create the thunk
 export const register = createAsyncThunk("user/register", async (payload) => {
@@ -16,9 +17,15 @@ export const register = createAsyncThunk("user/register", async (payload) => {
 export const login = createAsyncThunk("user/login", async (payload) => {
   const data = await userApi.login(payload);
 
+  const responseApiDog = await axios.get(
+    "https://dog.ceo/api/breeds/image/random"
+  );
+  const avatarDog = responseApiDog.data.message;
+
   // save data to local storage
   localStorage.setItem(StorageKeys.TOKEN, data.jwt);
   localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
+  localStorage.setItem(StorageKeys.AVATAR, avatarDog);
 
   return data.user;
 });
@@ -40,6 +47,7 @@ const userSlice = createSlice({
       localStorage.clear(StorageKeys.TOKEN);
       localStorage.clear(StorageKeys.USER);
       localStorage.clear(StorageKeys.CART);
+      localStorage.clear(StorageKeys.AVATAR);
 
       state.current = {};
       state.cart = {
@@ -66,7 +74,7 @@ const userSlice = createSlice({
         } else {
           // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
           const newItem = {
-            count: 1,
+            count: quanityAdded,
             id: product.id,
             name: product.name,
             imgURL: product.pictureURL,

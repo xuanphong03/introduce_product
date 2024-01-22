@@ -12,6 +12,7 @@ function ProductDetail() {
   const { id } = useParams();
   // phần này để lấy sp và trạng thái
   const { product_list } = useSelector((state) => state.products);
+  console.log(product_list);
   // const { product, loading } = useProductDetail(id);
   const [quanity, setQuanity] = useState(0);
   const infoUser = useSelector((state) => state.user.current);
@@ -26,6 +27,7 @@ function ProductDetail() {
   };
   const product = product_list.find((item) => item.id === id);
   console.log(product);
+  console.log(id);
 
   const handleAddToCart = () => {
     if (quanity > 0) {
