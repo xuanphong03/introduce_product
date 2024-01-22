@@ -5,10 +5,9 @@ import Logo from "../../assets/images/logo.png";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/Auth/userSlice";
-import { Badge, Button, ClickAwayListener, Tooltip } from "@mui/material";
+import { Badge } from "@mui/material";
 import HeadlessTippy from "@tippyjs/react/headless";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import Cart from "../Cart/CartList";
 import CartList from "../Cart/CartList";
 import CartEmty from "../Cart/CartEmty";
 
@@ -18,8 +17,8 @@ Header.propTypes = {
 
 const NAVIGATIONS = [
   { id: 1, name: "Home", url: "/" },
-  { id: 2, name: "About", url: "/about" },
   { id: 3, name: "Products", url: "/products" },
+  { id: 2, name: "About", url: "/about" },
 ];
 
 function Header({ openForm }) {
@@ -30,8 +29,7 @@ function Header({ openForm }) {
 
   const { totalItem } = useSelector((state) => state.user.cart);
   const infoUser = useSelector((state) => state.user.current);
-
-  const isLoggedIn = !!infoUser.id;
+  const isAuthenication = !!infoUser.id;
 
   const menuRef = useRef(null);
 
@@ -90,28 +88,30 @@ function Header({ openForm }) {
         </ul>
       </div>
       <div className="flex items-center">
-        <HeadlessTippy
-          render={(attrs) => (
-            <div tabIndex="-1" {...attrs}>
-              {totalItem === 0 ? <CartEmty /> : <CartList />}
-            </div>
-          )}
-          placement="bottom-end"
-          onClickOutside={handleToggleShowCart}
-          visible={showCart}
-          interactive
-        >
-          <Badge
-            onClick={handleToggleShowCart}
-            className="mr-2"
-            badgeContent={totalItem}
-            color="primary"
+        {isAuthenication && (
+          <HeadlessTippy
+            render={(attrs) => (
+              <div tabIndex="-1" {...attrs}>
+                {totalItem === 0 ? <CartEmty /> : <CartList />}
+              </div>
+            )}
+            placement="bottom-end"
+            onClickOutside={handleToggleShowCart}
+            visible={showCart}
+            interactive
           >
-            <ShoppingCartIcon color="action" />
-          </Badge>
-        </HeadlessTippy>
+            <Badge
+              onClick={handleToggleShowCart}
+              className="mr-2 cursor-pointer"
+              badgeContent={totalItem}
+              color="primary"
+            >
+              <ShoppingCartIcon color="action" />
+            </Badge>
+          </HeadlessTippy>
+        )}
 
-        {!isLoggedIn && (
+        {!isAuthenication && (
           <div
             className="flex items-center text-lg cursor-pointer px-6 py-[6px] ml-[2px] hover:bg-purple-700 hover:text-white rounded-md"
             onClick={handleClickLogin}
@@ -121,7 +121,7 @@ function Header({ openForm }) {
           </div>
         )}
 
-        {isLoggedIn && (
+        {isAuthenication && (
           <div
             ref={menuRef}
             onClick={toggleOpenMenu}

@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductToCart } from "../../../Auth/userSlice";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 ProductItem.propTypes = {
   product: PropTypes.object.isRequired,
 };
@@ -11,17 +12,32 @@ ProductItem.propTypes = {
 function ProductItem({ product }) {
   const dispatch = useDispatch();
   const { product_list } = useSelector((state) => state.products);
+  const infoUser = useSelector((state) => state.user.current);
+  const isAuthenication = !!infoUser.id;
 
-  const handleClickAdd = () => {
-    const inFormationProductAdded = product_list.find(
-      (item) => item.id === product.id
-    );
-    dispatch(addProductToCart(inFormationProductAdded));
+  const handleClickAdd = (e) => {
+    e.preventDefault();
+    if (isAuthenication) {
+      const inFormationProductAdded = product_list.find(
+        (item) => item.id === product.id
+      );
+      dispatch(addProductToCart({ product: inFormationProductAdded }));
+      toast.success("Add product to cart successfully 🥳🤩🤩🤩", {
+        autoClose: 3000,
+      });
+    } else {
+      toast.error("Please login account to add product to cart 👌!", {
+        autoClose: 3000,
+      });
+    }
   };
 
   return (
-    <div className="hover:cursor-pointer hover:scale-105 transition-transform w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-      <div>
+    <Link
+      to={`/product-detail/${product.id}`}
+      className="hover:cursor-pointer hover:scale-105 transition-transform w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+    >
+      <div to={`/product-detail/${product.id}`}>
         <img
           className="rounded-t-lg h-40 w-full object-contain"
           src={product.pictureURL}
@@ -29,9 +45,9 @@ function ProductItem({ product }) {
         />
       </div>
       <div className="mt-2 px-4 pb-2">
-        <h5 className="font-medium text-base tracking-tight line-clamp-2 text-gray-900 dark:text-white">
+        <span className="font-medium text-base tracking-tight line-clamp-2 text-gray-900 dark:text-white truncate">
           {product.name}
-        </h5>
+        </span>
 
         <div className="flex items-center justify-between mt-2">
           <span className="text-xl mr-3 font-bold text-gray-900 dark:text-white">
@@ -46,7 +62,7 @@ function ProductItem({ product }) {
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

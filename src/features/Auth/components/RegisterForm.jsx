@@ -67,7 +67,7 @@ function RegisterForm({ onClose, onSubmit, onChange }) {
   };
 
   return (
-    <div className="absolute top-0 left-0 right-0 flex flex-col justify-center min-h-screen overflow-hidden">
+    <div className="absolute z-50 top-0 left-0 right-0 flex flex-col justify-center min-h-screen overflow-hidden">
       <div className="relative w-full p-6 m-auto bg-white rounded-md shadow-md max-w-xl">
         {isSubmitting && (
           <LinearProgress

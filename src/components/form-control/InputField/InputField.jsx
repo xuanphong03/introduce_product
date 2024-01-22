@@ -28,6 +28,7 @@ function InputField({
         {required && <span className="font-light text-sm"> (required)</span>}
       </label>
       <input
+        id={id}
         {...register}
         placeholder={placeholder}
         type={type}

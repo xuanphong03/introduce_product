@@ -11,6 +11,8 @@ import Home from "./features/Home/Home";
 import ProductAdmin from "./features/Product/ProductAdmin/ProductAdmin";
 import ProductUser from "./features/Product/ProductUser/ProductUser";
 import Footer from "./components/Footer/Footer";
+import About from "./features/About/About";
+import ProductDetail from "./features/Product/ProductDetail/ProductDetail";
 
 const MODE = {
   LOGIN: "login",
@@ -46,11 +48,13 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
         <Route path="/products" element={<ProductUser />} />
         <Route
           path="/admin/*"
           element={isLoggedIn ? <ProductAdmin /> : <NotHavePermissionAccess />}
         />
+        <Route path="/product-detail/:id" element={<ProductDetail />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
       <ToastContainer />

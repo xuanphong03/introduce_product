@@ -20,6 +20,7 @@ function PasswordField({ id, label, placeholder, register, errorMessage }) {
       </label>
       <div className="relative">
         <input
+          id={id}
           {...register}
           placeholder={placeholder}
           type={showPassword ? "text" : "password"}

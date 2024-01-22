@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { Box, Chip } from "@mui/material";
 import { useSelector } from "react-redux";
 
-FilterViewer.propTypes = {};
+FilterViewer.propTypes = {
+  filters: PropTypes.object,
+  onChange: PropTypes.func,
+};
 
 const FILTER_LIST = [
   {

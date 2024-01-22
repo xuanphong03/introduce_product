@@ -6,7 +6,7 @@ import Contact from "./components/Contact";
 
 function Home() {
   return (
-    <div className="bg-gray-200 pt-[var(--height-header)]">
+    <div className="pt-[var(--height-header)]">
       <Banner />
       <NewArrivals />
       <Collections />

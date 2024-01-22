@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userApi from "../../apis/userApi";
 import StorageKeys from "../../constants/storage-key";
-import uuid from "react-uuid";
 
 // First, create the thunk
 export const register = createAsyncThunk("user/register", async (payload) => {
@@ -51,18 +50,34 @@ const userSlice = createSlice({
     },
 
     addProductToCart(state, action) {
-      const product = action.payload;
-
+      const { product, count } = action.payload;
+      let quanityAdded = 1;
+      if (count) quanityAdded = count;
       if (product) {
-        const newItem = {
-          id: uuid(),
-          name: product.name,
-          price: product.price,
-        };
+        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng hay chưa
+        const existingItem = state.cart.items.find(
+          (item) => item.name === product.name
+        );
 
-        state.cart.items.push(newItem);
-        state.cart.totalItem += 1;
-        state.cart.totalCost += product.price;
+        if (existingItem) {
+          // Nếu sản phẩm đã tồn tại, chỉ cần tăng số lượng và giá tiền
+          existingItem.count += quanityAdded;
+          existingItem.totalPrice += product.price * quanityAdded;
+        } else {
+          // Nếu sản phẩm chưa tồn tại, thêm vào giỏ hàng
+          const newItem = {
+            count: 1,
+            id: product.id,
+            name: product.name,
+            imgURL: product.pictureURL,
+            unitPrice: product.price,
+            totalPrice: product.price,
+          };
+
+          state.cart.items.push(newItem);
+        }
+        state.cart.totalItem += quanityAdded;
+        state.cart.totalCost += product.price * quanityAdded;
 
         // Lưu vào localStorage
         localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
