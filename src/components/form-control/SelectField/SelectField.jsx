@@ -9,7 +9,7 @@ SelectField.propTypes = {
 
 function SelectField({ name, label, options, register }) {
   return (
-    <div className="my-2 flex items-center">
+    <div className="flex items-center my-2">
       <label
         htmlFor={name}
         className="text-sm font-semibold text-gray-800 mr-2"
@@ -22,8 +22,8 @@ function SelectField({ name, label, options, register }) {
         name={name}
         {...register}
       >
-        {options.map((option, index) => (
-          <option key={index} value={option}>
+        {options.map((option) => (
+          <option key={option} value={option}>
             {option}
           </option>
         ))}

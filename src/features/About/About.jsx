@@ -12,7 +12,7 @@ function About() {
       </div>
       <div className="flex-1 text-gray-600 ml-8 font-mono h-[500px] flex flex-col justify-between">
         <h4 className="text-3xl">ABOUT US</h4>
-        <div>
+        <div className="overflow-y-auto">
           <p>
             Welcome to MICHAEL, your premier destination for luxury timepieces.
             We take pride in curating a diverse and sophisticated collection of

@@ -13,6 +13,9 @@ import ProductUser from "./features/Product/ProductUser/ProductUser";
 import Footer from "./components/Footer/Footer";
 import About from "./features/About/About";
 import ProductDetail from "./features/Product/ProductDetail/ProductDetail";
+import Account from "./features/Account/Account";
+import CartPage from "./features/Cart/CartPage";
+import Checkout from "./features/Checkout/Checkout";
 
 const MODE = {
   LOGIN: "login",
@@ -50,6 +53,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/products" element={<ProductUser />} />
+        <Route path="/user/account" element={<Account />} />
+        <Route path="/cart/checkout" element={<Checkout />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route
           path="/admin/*"
           element={isLoggedIn ? <ProductAdmin /> : <NotHavePermissionAccess />}

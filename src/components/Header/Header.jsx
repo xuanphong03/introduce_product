@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import Logo from "../../assets/images/logo.png";
+import Logo2 from "../../assets/images/MC_logo_2022.svg";
 import StorageKeys from "../../constants/storage-key";
 import { logout } from "../../features/Auth/userSlice";
 import CartEmty from "../Cart/CartEmty";
@@ -20,6 +20,7 @@ const NAVIGATIONS = [
   { id: 1, name: "Home", url: "/" },
   { id: 3, name: "Products", url: "/products" },
   { id: 2, name: "About", url: "/about" },
+  { id: 4, name: "Cart", url: "/cart" },
 ];
 
 function Header({ openForm }) {
@@ -67,7 +68,7 @@ function Header({ openForm }) {
     <div className="flex fixed top-0 left-0 right-0 z-50 justify-between bg-slate-400  items-center px-12 h-[var(--height-header)]">
       <div className="flex items-center">
         <Link to="/" className="block font-extrabold text-2xl mr-12">
-          <img src={Logo} alt="" className=" lg:hidden w-16 h-16" />
+          <img src={Logo2} alt="" className=" lg:hidden w-16 h-16" />
           <span className="hidden lg:block leading-[var(--height-header)]">
             MICHAEL WATCH
           </span>
@@ -90,26 +91,28 @@ function Header({ openForm }) {
       </div>
       <div className="flex items-center">
         {isAuthenication && (
-          <HeadlessTippy
-            render={(attrs) => (
-              <div tabIndex="-1" {...attrs}>
-                {totalItem === 0 ? <CartEmty /> : <CartList />}
-              </div>
-            )}
-            placement="bottom-end"
-            onClickOutside={handleToggleShowCart}
-            visible={showCart}
-            interactive
-          >
-            <Badge
-              onClick={handleToggleShowCart}
-              className="mr-2 cursor-pointer"
-              badgeContent={totalItem}
-              color="primary"
+          <div>
+            <HeadlessTippy
+              render={(attrs) => (
+                <div tabIndex="-1" {...attrs}>
+                  {totalItem === 0 ? <CartEmty /> : <CartList />}
+                </div>
+              )}
+              placement="bottom-end"
+              onClickOutside={handleToggleShowCart}
+              visible={showCart}
+              interactive
             >
-              <ShoppingCartIcon fontSize="medium" color="action" />
-            </Badge>
-          </HeadlessTippy>
+              <Badge
+                onClick={handleToggleShowCart}
+                className="mr-2 cursor-pointer"
+                badgeContent={totalItem}
+                color="primary"
+              >
+                <ShoppingCartIcon fontSize="medium" color="action" />
+              </Badge>
+            </HeadlessTippy>
+          </div>
         )}
 
         {!isAuthenication && (
@@ -155,6 +158,14 @@ function Header({ openForm }) {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
                       Manage product
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/user/account"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                    >
+                      Account
                     </Link>
                   </li>
                   <li>

@@ -15,7 +15,7 @@ export const register = createAsyncThunk("user/register", async (payload) => {
 });
 
 export const login = createAsyncThunk("user/login", async (payload) => {
-  const data = await userApi.login(payload);
+  const resApiLogin = await userApi.login(payload);
 
   const responseApiDog = await axios.get(
     "https://dog.ceo/api/breeds/image/random"
@@ -23,11 +23,11 @@ export const login = createAsyncThunk("user/login", async (payload) => {
   const avatarDog = responseApiDog.data.message;
 
   // save data to local storage
-  localStorage.setItem(StorageKeys.TOKEN, data.jwt);
-  localStorage.setItem(StorageKeys.USER, JSON.stringify(data.user));
+  localStorage.setItem(StorageKeys.TOKEN, resApiLogin.jwt);
+  localStorage.setItem(StorageKeys.USER, JSON.stringify(resApiLogin.user));
   localStorage.setItem(StorageKeys.AVATAR, avatarDog);
 
-  return data.user;
+  return resApiLogin.user;
 });
 
 const userSlice = createSlice({
@@ -39,6 +39,12 @@ const userSlice = createSlice({
       totalItem: 0,
       totalCost: 0,
       items: [],
+    },
+    payment: JSON.parse(localStorage.getItem(StorageKeys.PAYMENT)) || {
+      cardName: "",
+      cardNumber: "",
+      expDate: "",
+      cvv: "",
     },
   },
   reducers: {
@@ -91,6 +97,100 @@ const userSlice = createSlice({
         localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
       }
     },
+
+    increaseQuanity(state, action) {
+      const { productId } = action.payload;
+      const existingItem = state.cart.items.find(
+        (item) => item.id === productId
+      );
+      if (existingItem) {
+        // Increase the quantity and update the total cost
+        existingItem.count += 1;
+        existingItem.totalPrice += existingItem.unitPrice;
+
+        state.cart.totalItem += 1;
+        state.cart.totalCost += existingItem.unitPrice;
+
+        // Update localStorage
+        localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
+      }
+    },
+
+    decreaseQuanity(state, action) {
+      const { productId } = action.payload;
+
+      const existingItem = state.cart.items.find(
+        (item) => item.id === productId
+      );
+
+      if (existingItem && existingItem.count > 1) {
+        // Decrease the quantity and update the total cost
+        existingItem.count -= 1;
+        existingItem.totalPrice -= existingItem.unitPrice;
+
+        state.cart.totalItem -= 1;
+        state.cart.totalCost -= existingItem.unitPrice;
+
+        // Update localStorage
+        localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
+      }
+    },
+
+    removeItemInCart(state, action) {
+      const { productId } = action.payload;
+      const existingItem = state.cart.items.find(
+        (item) => item.id === productId
+      );
+      if (existingItem) {
+        state.cart.items = state.cart.items.filter(
+          (item) => item.id !== productId
+        );
+        state.cart.totalItem -= existingItem.count;
+        state.cart.totalCost -= existingItem.count * existingItem.unitPrice;
+        // Update localStorage
+        localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
+      }
+    },
+    changeQuanity(state, action) {
+      const { productId, newQuanity } = action.payload;
+      const existingItem = state.cart.items.find(
+        (item) => item.id === productId
+      );
+      if (existingItem && newQuanity >= 1) {
+        // Cập nhật số lượng và chi phí ứng với sản phẩm
+        const oldQuanity = existingItem.count;
+        existingItem.count = newQuanity;
+        existingItem.totalPrice = existingItem.unitPrice * newQuanity;
+
+        //Cập nhật số lượng và tổng chi phí trong giỏ hàng
+        state.cart.totalItem = state.cart.totalItem - oldQuanity + newQuanity;
+        state.cart.totalCost =
+          state.cart.totalCost -
+          oldQuanity * existingItem.unitPrice +
+          newQuanity * existingItem.unitPrice;
+
+        // Update localStorage
+        localStorage.setItem(StorageKeys.CART, JSON.stringify(state.cart));
+      }
+    },
+    checkoutCompleted(state, action) {
+      state.cart = {
+        totalItem: 0,
+        totalCost: 0,
+        items: [],
+      };
+      // Clear cart in localStorage
+      localStorage.removeItem(StorageKeys.CART);
+    },
+    changeInforPayment(state, action) {
+      const { newInforPayment } = action.payload;
+      state.payment = newInforPayment;
+      // Update localStorage
+      localStorage.setItem(StorageKeys.PAYMENT, JSON.stringify(state.payment));
+    },
+    updateUserInformation(state, action) {
+      const { newInformation } = action.payload;
+    },
   },
   extraReducers: {
     [login.fulfilled]: (state, action) => {
@@ -106,4 +206,13 @@ const userSlice = createSlice({
 // export const { increment, decrement, incrementByAmount } = counterSlice.actions
 const { actions, reducer } = userSlice;
 export default reducer;
-export const { logout, addProductToCart } = actions;
+export const {
+  logout,
+  addProductToCart,
+  increaseQuanity,
+  decreaseQuanity,
+  removeItemInCart,
+  changeQuanity,
+  checkoutCompleted,
+  changeInforPayment,
+} = actions;

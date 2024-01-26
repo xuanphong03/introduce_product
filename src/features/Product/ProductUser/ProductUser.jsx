@@ -70,7 +70,7 @@ function ProductUser() {
   };
 
   return (
-    <div className="pt-[var(--height-header)] grid grid-cols-12 gap-6 mx-6 mt-6 pb-12">
+    <div className="pt-[var(--height-header)]  grid grid-cols-12 gap-6 mx-6 mt-6 pb-12">
       <div className="col-span-3">
         <ProductFilter filters={queryParams} onChange={handleFiltersChange} />
       </div>
